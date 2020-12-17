@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,14 +21,14 @@ public class LoginController {
     LoginService service;
 
     @RequestMapping(method = RequestMethod.POST, value = "/auth/login")
-    public ResponseEntity<AuthResponse> login(UserLoginRequest request) {
+    public ResponseEntity<AuthResponse> login(@RequestBody UserLoginRequest request) {
         AuthResponse response = service.userLogin(request);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/auth/register")
-    public ResponseEntity<AuthResponse> register(UserLoginRequest request) {
+    public ResponseEntity<AuthResponse> register(@RequestBody UserLoginRequest request) {
         AuthResponse response = service.userRegister(request);
         return new ResponseEntity<>(response, HttpStatus.OK);
 

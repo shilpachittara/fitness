@@ -36,11 +36,11 @@ public class LoginService {
     public AuthResponse userLogin(UserLoginRequest request) {
         AccountEntity accountEntity = accountDao.findByEmailOrPhone(request.getEmail(), request.getPhone());
         if (isEmpty(accountEntity)) {
-            throw new UserException("Invalid username or password", HttpStatus.UNAUTHORIZED);
+            throw new UserException("Invalid username or password", HttpStatus.BAD_REQUEST);
         }
         if (!(request.isFacebookLogin() || request.isGoogleLogin())) {
             if (!passwordEncryptor.checkPassword(request.getPassword(), accountEntity.getPassword())) {
-                throw new UserException("Invalid username or password", HttpStatus.UNAUTHORIZED);
+                throw new UserException("Invalid username or password", HttpStatus.BAD_REQUEST);
             }
         }
         AuthResponse authResponse = authTokenService.login(accountEntity);
@@ -50,11 +50,11 @@ public class LoginService {
     public AuthResponse userRegister(UserLoginRequest request) {
         AccountEntity accountEntity = accountDao.findByEmailOrPhone(request.getEmail(), request.getPhone());
         if (!isEmpty(accountEntity)) {
-            throw new UserException("User Already Exists", HttpStatus.UNAUTHORIZED);
+            throw new UserException("User Already Exists", HttpStatus.BAD_REQUEST);
         }
         if (!(request.isFacebookLogin() || request.isGoogleLogin())) {
             if(isEmpty(request.getPassword())){
-                throw new UserException("Invalid password", HttpStatus.UNAUTHORIZED);
+                throw new UserException("Invalid password", HttpStatus.BAD_REQUEST);
             }
         }
         accountEntity = new AccountEntity();
@@ -63,6 +63,7 @@ public class LoginService {
         accountEntity.setUpdated(LocalDateTime.now());
         accountEntity.setEmail(request.getEmail());
         accountEntity.setPhone(request.getPhone());
+        accountEntity = accountDao.save(accountEntity);
         AuthResponse authResponse = authTokenService.login(accountEntity);
         return authResponse;
     }

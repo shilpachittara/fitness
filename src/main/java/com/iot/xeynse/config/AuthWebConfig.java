@@ -24,7 +24,7 @@ public class AuthWebConfig {
         filter.setJwtSecret(jwtSecret);
         final FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
         filterRegistrationBean.setFilter(filter);
-        filterRegistrationBean.addUrlPatterns("/api");
+        filterRegistrationBean.addUrlPatterns("/api/*");
         return filterRegistrationBean;
     }
 
